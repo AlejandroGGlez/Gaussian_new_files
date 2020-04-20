@@ -127,9 +127,6 @@ def write_input_file_2():
             atomic_number = int(fields[1])
             element = periodic_table[atomic_number]
             x, y, z = map(float, fields[3:])
-            for variable in (x,y,z):
-                while len(variable)<11:
-                    variable=' '+variable
             new_coordinate.write(f'{element}\t{x}\t{y}\t{z}\n')
         
         new_coordinate.writelines(qfi_lines_2[end_document:])
