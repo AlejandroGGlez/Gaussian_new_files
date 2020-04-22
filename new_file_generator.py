@@ -69,12 +69,30 @@ def record_input_parameters_1():
         elif 'ModRedundant' in line: #seeks fot the ModRedundant parameter
             modredundant=i
         
-      
+def new_name():
+    """This function asks the user if they want to name the file"""
+
+    input_1=input('Do you want to name the new file): y/n\t')
+    if 'y' in input_1.lower(): 
+        name=input(f'Please introduce the file name (no extension are required):\t')
+        while ' '  in name:
+            name=input('Please introduce a valid file name without spaces\t')
+        if name[-3:]=='gjf':
+            name=name[:-4]
+        return name
+    elif 'n' in input_1.lower():
+        return 'new_coordinate'
+    else:
+        print('Please introduce a valid command: "y" or "n"')
+        new_name()
+
+
 # Create a new file with writing rights
 def write_input_file_1():
     """This functions writes a Gaussian input file(gjf) if no original input file
     is given"""
-    with open("new_coordinate.gjf", "w") as new_coordinate:
+    name=new_name()
+    with open(f"{name}.gjf", "w") as new_coordinate:
         patron='\n'
         input_options_1= re.sub(patron,"",(qfi_lines[input_options+2])) 
         input_options_2= re.sub(patron,"",(qfi_lines[input_options+3]))
@@ -90,7 +108,7 @@ def write_input_file_1():
             atomic_number = int(fields[1])
             element = periodic_table[atomic_number]
             x, y, z = map(float, fields[3:])
-            new_coordinate.write(f'{element} {x} {y} {z}\n')
+            new_coordinate.write(f'{element}\t{x}\t{y}\t{z}\n')
         if type(modredundant)==int:
             new_coordinate.write(f'\n{qfi_lines[modredundant+1][1:]}\n')
         #This line must be mudified for every case where the elements and the bases are changed
@@ -114,11 +132,11 @@ def record_input_parameters_2():
             end_document=i+input_options+4 
             break
                         
-    
 def write_input_file_2():
     """This functions writes a Gaussian input file(gjf) if an original input file
     is given"""
-    with open("new_coordinate.gjf", "w") as new_coordinate:
+    name= new_name()
+    with open(f"{name}.gjf", "w") as new_coordinate:
         new_coordinate.writelines(qfi_lines_2[:input_options+4])
         for i, line in enumerate(qfi_lines[coordinate_start+5:]):
             if '---' in line:
